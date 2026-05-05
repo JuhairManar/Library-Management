@@ -1,23 +1,30 @@
 from users import User
+from user_repository import UserRepository
 
 class UserManager:
     def __init__(self):
-        self.users = {}
+        self.repo=UserRepository()
 
-    def register(self, name, roll, password):
-        if roll in self.users:
+    def register(self,name,roll,password):
+        if self.repo.get_user(roll):
             print("Account already exists")
             return None
 
-        user = User(name, roll, password)
-        self.users[roll] = user
-        return user
+        self.repo.add_user(roll,name,password)
+        return User(name,roll,password)
 
-    def login(self, roll, password):
-        user = self.users.get(roll)
-        if user and user.password == password:
-            return user
+    def login(self,roll,password):
+        data=self.repo.get_user(roll)
+
+        if data and data["password"]==password:
+            return User(data["name"],data["roll"],data["password"])
+
         return None
 
-    def get_user(self, roll):
-        return self.users.get(roll)
+    def get_user(self,roll):
+        data=self.repo.get_user(roll)
+
+        if data:
+            return User(data["name"],data["roll"],data["password"])
+
+        return None

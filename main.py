@@ -7,11 +7,7 @@ from catalog_service import CatalogService
 
 class LibrarySystem:
     def __init__(self):
-        self.library = Library({
-            "english": Book("English", 2),
-            "bangla": Book("Bangla", 5),
-            "math": Book("Math", 3)
-        })
+        self.library = Library()
 
         self.user_manager = UserManager()
         self.borrow_service = BorrowService(self.library, self.user_manager)
