@@ -1,4 +1,4 @@
-from .book import Book
+from book import Book
 
 class DonationService:
     def __init__(self,library):

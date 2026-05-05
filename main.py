@@ -1,9 +1,9 @@
-from .book import Book
-from .library import Library
-from .user_manager import UserManager
-from .borrow_service import BorrowService
-from .donation_service import DonationService
-from .catalog_service import CatalogService
+from book import Book
+from library import Library
+from user_manager import UserManager
+from borrow_service import BorrowService
+from donation_service import DonationService
+from catalog_service import CatalogService
 
 class LibrarySystem:
     def __init__(self):
