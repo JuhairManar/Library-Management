@@ -1,3 +1,5 @@
+from collections import deque
+
 class User:
     def __init__(self,name,roll,password):
         self.name=name
