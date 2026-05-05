@@ -16,6 +16,7 @@ class Book:
 class Library:
     def __init__(self, book_list):
         self.book_list = book_list
+        self.waiting = {}
 
     def borrow_book(self, bookName, user):
         bookName = bookName.strip().lower()
@@ -35,13 +36,15 @@ class Library:
             if bookName not in self.waiting:
                 self.waiting[bookName] = deque()
 
-            self.waiting[bookName].append(user.roll)
+            if user.roll not in self.waiting[bookName]:
+                self.waiting[bookName].append(user.roll)
 
             print("Book unavailable. Added to waiting list.")
             return
 
         book.quantity -= 1
         user.borrow_books.add(bookName)
+        
         print("Borrow done")
 
     def return_book(self, bookName, user):
@@ -56,17 +59,15 @@ class Library:
             return
 
         user.borrow_books.remove(bookName)
+        user.returned_books.add(bookName)
 
-        # if waiting users exist
         if bookName in self.waiting and len(self.waiting[bookName]) > 0:
 
             next_roll = self.waiting[bookName].popleft()
-
             next_user = users[next_roll]
             next_user.borrow_books.add(bookName)
 
             print("Returned successfully")
-            print("Book automatically issued to waiting user:", next_user.name)
 
         else:
             self.book_list[bookName].quantity += 1
@@ -84,16 +85,18 @@ class Library:
             return
 
         if bookname in self.book_list:
-            self.book_list[bookname]+=amount
+            self.book_list[bookname].quantity+=amount
         else:
-            self.book_list[bookname]=amount
+            self.book_list[bookname] = Book(bookname.title(), amount)
 
         print("Thanks for donating")
 
     def booklist(self):
-        for book in self.book_list:
-            if self.book_list[book] > 0:
-                print(book.title())  
+        for key in self.book_list:
+            book = self.book_list[key]
+
+            if book.quantity > 0:
+                print(book.title, "-", book.quantity) 
 
                     
 
