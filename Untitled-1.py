@@ -23,36 +23,52 @@ class Library:
             return
 
         if bookName in user.borrow_books:
-            print("You have to return it first")
+            print("You already borrowed it")
             return
 
         book = self.book_list[bookName]
 
         if book.quantity == 0:
-            print("Sorry, this book is over")
+
+            if bookName not in self.waiting:
+                self.waiting[bookName] = deque()
+
+            self.waiting[bookName].append(user.roll)
+
+            print("Book unavailable. Added to waiting list.")
             return
 
         book.quantity -= 1
         user.borrow_books.add(bookName)
-
         print("Borrow done")
 
     def return_book(self, bookName, user):
-        bookName=bookName.strip().lower()
+        bookName = bookName.strip().lower()
 
-        if bookName in self.book_list:
-
-            if bookName not in user.borrow_books:
-                print("You didn't borrow this book")
-                return
-
-            self.book_list[bookName].quantity+= 1
-            user.borrow_books.remove(bookName)
-            user.returned_books.append(bookName)
-            print("Book returned successfully")
+        if bookName not in self.book_list:
+            print("This book doesn't belong to this library")
             return
 
-        print("This book isn't belong to this library")
+        if bookName not in user.borrow_books:
+            print("You didn't borrow this book")
+            return
+
+        user.borrow_books.remove(bookName)
+
+        # if waiting users exist
+        if bookName in self.waiting and len(self.waiting[bookName]) > 0:
+
+            next_roll = self.waiting[bookName].popleft()
+
+            next_user = users[next_roll]
+            next_user.borrow_books.add(bookName)
+
+            print("Returned successfully")
+            print("Book automatically issued to waiting user:", next_user.name)
+
+        else:
+            self.book_list[bookName].quantity += 1
+            print("Book returned successfully")
 
     def donate(self, bookname, amount):
         bookname=bookname.strip().lower()
