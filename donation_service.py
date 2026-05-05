@@ -1,23 +1,25 @@
 from book import Book
 
 class DonationService:
-    def __init__(self,library):
-        self.library=library
+    def __init__(self, library):
+        self.library = library
 
-    def donate(self,book_name,amount):
-        book_name=book_name.strip().lower()
+    def donate(self, book_name, amount):
+        book_name = book_name.strip().lower()
 
-        if book_name=="":
+        if not book_name:
             print("Invalid book name")
             return
 
-        if amount<=0:
-            print("Donation amount must be positive")
+        if amount <= 0:
+            print("Donation must be positive")
             return
 
-        if book_name in self.library.book_list:
-            self.library.book_list[book_name].restock(amount)
+        book = self.library.get_book(book_name)
+
+        if book:
+            book.restock(amount)
         else:
-            self.library.book_list[book_name]=Book(book_name.title(),amount)
+            self.library.add_book(book_name, Book(book_name.title(), amount))
 
         print("Thanks for donating")

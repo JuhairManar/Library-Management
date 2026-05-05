@@ -1,10 +1,15 @@
 class CatalogService:
-    def __init__(self,library):
-        self.library=library
+    def __init__(self, library):
+        self.library = library
 
     def booklist(self):
-        for key in self.library.book_list:
-            book=self.library.book_list[key]
+        print("\nAvailable Books:")
+        print("----------------")
 
-            if book.quantity>0:
-                print(book.title,"-",book.quantity)
+        books = self.library.all_books()
+
+        for name, book in books.items():
+            if book.quantity > 0:
+                print(f"{book.title} - {book.quantity}")
+
+        print("----------------\n")
